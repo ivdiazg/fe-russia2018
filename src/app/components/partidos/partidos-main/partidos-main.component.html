@@ -1,0 +1,50 @@
+<mat-accordion>
+  <!-- <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Personal data
+      </mat-panel-title>
+      <mat-panel-description>
+        Type your name and age
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <p>I'm visible because I am open</p>
+  </mat-expansion-panel> -->
+  <mat-expansion-panel *ngFor="let group of groups">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Grupo {{group.grupo}}
+      </mat-panel-title>
+      <!-- <mat-panel-description>
+      </mat-panel-description> -->
+    </mat-expansion-panel-header>
+    <!-- CUERPO -->
+    <div class="row text-center" *ngFor="let partido of partidos">
+      <div class="col-md-1">
+        <div class="logo-img">
+          <img src="../../../assets/img/flags/rusia.png" width="50px" alt="">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label>Equipo A</label>
+          <input type="text" class="form-control border-input" placeholder="">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label>Equipo B</label>
+          <input type="text" class="form-control border-input" placeholder="">
+        </div>
+      </div>
+      <div class="col-md-1">
+        <div class="logo-img">
+          <img src="../../../assets/img/flags/arabia-saudi.png" width="50px" alt="">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label>Fecha partido: 12-12-12 10:00</label>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

@@ -9,7 +9,7 @@ export interface RouteInfo {
 
 export const ROUTES: RouteInfo[] = [
   { path: 'home', title: 'Home', icon: 'ti-panel', class: '' },
-  // { path: 'client', title: 'Cliente', icon: 'ti-user', class: '' },
+  { path: 'partidos', title: 'Partidos', icon: 'ti-user', class: '' },
   // { path: 'category', title: 'Categoria', icon: 'ti-view-list-alt', class: '' },
   // { path: 'product', title: 'Producto', icon: 'ti-tag', class: '' },
   // { path: 'sale', title: 'Venta', icon: 'ti-shopping-cart', class: '' },

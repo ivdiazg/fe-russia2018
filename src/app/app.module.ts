@@ -10,6 +10,7 @@ import { HomeComponent } from './components/home/home.component';
 import { SidebarModule } from './components/sidebar/sidebar.module';
 import { NavbarModule } from './shared/navbar/navbar.module';
 import { FooterModule } from './shared/footer/footer.module';
+import { PartidosMainComponent } from './components/partidos/partidos-main/partidos-main.component';
 
 // MATERIAL
 import { MatInputModule } from '@angular/material/input';
@@ -18,11 +19,15 @@ import { MatPaginatorModule, MatCardModule } from '@angular/material';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { PartidosService } from './services/partidos.service';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    PartidosMainComponent
   ],
   imports: [
     HttpClientModule,
@@ -31,6 +36,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatTabsModule,
+    MatExpansionModule,
     MatCardModule,
     MatTableModule,
     MatPaginatorModule,
@@ -42,7 +48,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     NavbarModule,
     FooterModule
   ],
-  providers: [],
+  providers: [PartidosService],
   bootstrap: [AppComponent],
   entryComponents: []
 })
