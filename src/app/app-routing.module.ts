@@ -6,9 +6,9 @@ import { PartidosMainComponent } from './components/partidos/partidos-main/parti
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  // { path: '**', pathMatch: 'full', redirectTo: 'home' },
   { path: 'home', component: HomeComponent },
   { path: 'partidos', component: PartidosMainComponent },
+  { path: '**', pathMatch: 'full', redirectTo: 'home' },
 ];
 
 @NgModule({

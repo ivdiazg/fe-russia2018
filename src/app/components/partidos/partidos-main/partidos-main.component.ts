@@ -18,6 +18,7 @@ export class PartidosMainComponent implements OnInit {
 
     this.partidosService.obtenerGrupos().then((res) => {
       this.groupMatches = res;
+      console.log(this.groupMatches);
     });
   }
 
@@ -39,7 +40,7 @@ export class PartidosMainComponent implements OnInit {
         if (this.inputs._results.find(x => x.name === `match${partido.idPartido}A`).value) {
           console.log(`match${partido.idPartido}A`, this.inputs._results.find(x => x.name === `match${partido.idPartido}A`).value);
         }
-        if (this.inputs._results.find(x => x.name === `match${partido.idPartido}A`).value) {
+        if (this.inputs._results.find(x => x.name === `match${partido.idPartido}B`).value) {
           console.log(`match${partido.idPartido}B`, this.inputs._results.find(x => x.name === `match${partido.idPartido}B`).value);
         }
       }
