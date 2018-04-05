@@ -11,6 +11,10 @@ import { SidebarModule } from './components/sidebar/sidebar.module';
 import { NavbarModule } from './shared/navbar/navbar.module';
 import { FooterModule } from './shared/footer/footer.module';
 import { PartidosMainComponent } from './components/partidos/partidos-main/partidos-main.component';
+import { MatchDayComponent } from './components/matchDay/match-day/match-day.component';
+
+// SERVICE
+import { PartidosService } from './services/partidos.service';
 
 // MATERIAL
 import { MatInputModule } from '@angular/material/input';
@@ -20,19 +24,20 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { PartidosService } from './services/partidos.service';
-
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    PartidosMainComponent
+    PartidosMainComponent,
+    MatchDayComponent
   ],
   imports: [
     HttpClientModule,
     FormsModule,
     MatDialogModule,
+    MatGridListModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatTabsModule,

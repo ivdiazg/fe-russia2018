@@ -1,0 +1,40 @@
+<mat-grid-list [cols]="cols" rowHeight="100px">
+  <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows" [style.background]="tile.color">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="row">
+        <div class="col-md-4 col-sm-4 col-xs-4">
+          <div class="logo-img pull-right">
+            <img src="../../../assets/img/flags/rusia.png" width="55px" alt="">
+          </div>
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-2 text-center">
+            <div class="form-group">
+            <label>Rusia</label>
+            <input type="text" name="match1A" ngModel #match="ngModel" id="match" class="form-control border-input inputsGoles" placeholder="">
+            <!-- <input type="text" [(ngModel)]="[partido.idPartido][partido.keynameA]" class="form-control border-input inputsGoles" placeholder=""> -->
+          </div>
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-2 text-center">
+          <div class="form-group">
+            <label>Brasil</label>
+            <input type="text" name="match1B" ngModel #match="ngModel" id="match" class="form-control border-input inputsGoles" placeholder="">
+            <!-- <input type="text" [(ngModel)]="[partido.idPartido][partido.keynameB]" class="form-control border-input inputsGoles" placeholder=""> -->
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-4">
+          <div class="logo-img pull-left">
+            <img src="../../../assets/img/flags/brasil.png" width="55px" alt="">
+          </div>
+        </div>
+      </div>
+      <div class="row text-center">
+        <br>
+        <label>Fecha partido: 04-06 11:00</label>
+      </div>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+<br><br>
+<div class="row col-md-offset-4 col-md-4 col-sm-offset-4 col-sm-4 col-xs-offset-4 col-xs-4">
+  <button class="btn btn-primary btn-block btn-fill btn-wd">Guardar</button>
+</div>
