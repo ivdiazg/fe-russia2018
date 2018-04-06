@@ -1,87 +1,70 @@
-<div class="content">
-  <mat-accordion>
-    <!-- <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Personal data
-        </mat-panel-title>
-        <mat-panel-description>
-          Type your name and age
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <p>I'm visible because I am open</p>
-    </mat-expansion-panel> -->
-    <mat-expansion-panel *ngFor="let group of groupMatches; let i = index;" [expanded]="step === i" (opened)="setStep(i)" hideToggle="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Grupo {{group.grupo}}
-        </mat-panel-title>
-        <!-- <mat-panel-description>
-        </mat-panel-description> -->
-      </mat-expansion-panel-header>
-      <!-- CUERPO -->
-      <div class="row" *ngFor="let partido of group.partidos">
-        <div class="col-md-1 col-sm-1 col-xs-1">
-          <div class="logo-img">
-            <img src="../../../assets/img/flags/{{partido.keynameA}}.png" width="55px" alt="">
+<form [formGroup]="form">
+  <div class="content">
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let group of groupMatches; let i = index;" [expanded]="step === i" (opened)="setStep(i)" hideToggle="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Grupo {{group.group}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <!-- CUERPO -->
+        <div class="row" *ngFor="let match of group.matches">
+          <div class="col-md-1 col-sm-1 col-xs-1">
+            <div class="logo-img">
+              <img src="../../../assets/img/flags/{{match.keynameA}}.png" width="55px" alt="">
+            </div>
+          </div>
+          <div class="col-md-2  col-sm-2 col-xs-2 text-center">
+            <div class="form-group">
+              <label>{{match.NombreA}}</label>
+              <input type="text" name="match{{match.idPartido}}A" formControlName="match{{match.idPartido}}A" class="form-control border-input inputsGoles">
+            </div>
+          </div>
+          <div class="col-md-2 col-sm-2 col-xs-2 text-center">
+            <div class="form-group">
+              <label>{{match.NombreB}}</label>
+              <input type="text" name="match{{match.idPartido}}B" formControlName="match{{match.idPartido}}B" class="form-control border-input inputsGoles">
+            </div>
+          </div>
+          <div class="col-md-1 col-sm-1 col-xs-1">
+            <div class="logo-img">
+              <img src="../../../assets/img/flags/{{match.keynameB}}.png" width="55px" alt="">
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-6">
+            <label>Fecha partido: {{match.fechaPartido}}</label>
           </div>
         </div>
-        <div class="col-md-2  col-sm-2 col-xs-2 text-center">
-          <div class="form-group">
-            <label>{{partido.NombreA}}</label>
-            <input type="text" name="match{{partido.idPartido}}A" ngModel #match="ngModel" id="match" class="form-control border-input inputsGoles"
-              placeholder="">
-            <!-- <input type="text" [(ngModel)]="[partido.idPartido][partido.keynameA]" class="form-control border-input inputsGoles" placeholder=""> -->
+        <mat-action-row>
+          <div *ngIf="i === 0">
+            <div class="text-center">
+              <button class="btn btn-primary btn-fill btn-wd" (click)="nextStep()">Siguiente</button>
+            </div>
           </div>
-        </div>
-        <div class="col-md-2 col-sm-2 col-xs-2 text-center">
-          <div class="form-group">
-            <label>{{partido.NombreB}}</label>
-            <input type="text" name="match{{partido.idPartido}}B" ngModel #match="ngModel" id="match" class="form-control border-input inputsGoles"
-              placeholder="">
-            <!-- <input type="text" [(ngModel)]="[partido.idPartido][partido.keynameB]" class="form-control border-input inputsGoles" placeholder=""> -->
+          <div *ngIf="i > 0 && i < (groupMatches.length - 1)">
+            <div class="text-center">
+              <button class="btn btn-warning btn-fill btn-wd" (click)="prevStep()">Anterior</button>
+              <button class="btn btn-primary btn-fill btn-wd" (click)="nextStep()">Siguiente</button>
+            </div>
           </div>
-        </div>
-        <div class="col-md-1 col-sm-1 col-xs-1">
-          <div class="logo-img">
-            <img src="../../../assets/img/flags/{{partido.keynameB}}.png" width="55px" alt="">
+          <div *ngIf="i === (groupMatches.length - 1)">
+            <div class="text-center">
+              <button class="btn btn-warning btn-fill btn-wd" (click)="prevStep()">Anterior</button>
+              <button class="btn btn-primary btn-fill btn-wd" (click)="nextStep()">Finalizar</button>
+            </div>
           </div>
-        </div>
-        <div class="col-md-6 col-sm-6 col-xs-6">
-          <label>Fecha partido: {{partido.fechaPartido}}</label>
-        </div>
-      </div>
-      <mat-action-row>
-        <div *ngIf="i === 0">
-          <div class="text-center">
-            <button class="btn btn-primary btn-fill btn-wd" (click)="nextStep()">Siguiente</button>
-          </div>
-          <!-- <button mat-button color="primary" (click)="nextStep()">Siguiente</button> -->
-        </div>
-        <div *ngIf="i > 0 && i < (groupMatches.length - 1)">
-          <div class="text-center">
-            <button class="btn btn-warning btn-fill btn-wd" (click)="prevStep()">Anterior</button>
-            <button class="btn btn-primary btn-fill btn-wd" (click)="nextStep()">Siguiente</button>
-          </div>
-          <!-- <button mat-button color="warn" (click)="prevStep()">Anterior</button>
-        <button mat-button color="primary" (click)="nextStep()">Siguiente</button> -->
-        </div>
-        <div *ngIf="i === (groupMatches.length - 1)">
-          <div class="text-center">
-            <button class="btn btn-warning btn-fill btn-wd" (click)="prevStep()">Anterior</button>
-            <button class="btn btn-primary btn-fill btn-wd" (click)="nextStep()">Finalizar</button>
-          </div>
-          <!-- <button mat-button color="warn" (click)="prevStep()">Anterior</button>
-        <button mat-button color="primary" (click)="nextStep()">Finalizar</button> -->
-        </div>
-      </mat-action-row>
-    </mat-expansion-panel>
-  </mat-accordion>
-  <button type="submit" (click)="show()"></button>
-  <div class="clearfix"></div>
-</div>
+        </mat-action-row>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <br>
+    <br>
+    <div class="row col-md-offset-4 col-md-4 col-sm-offset-4 col-sm-4 col-xs-offset-4 col-xs-4">
+      <button class="btn btn-primary btn-block btn-fill btn-wd" (click)="saveResults()">Guardar</button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
 
-<!-- <mat-accordion class="example-headers-align">
+  <!-- <mat-accordion class="example-headers-align">
   <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -121,3 +104,4 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion> -->
+</form>

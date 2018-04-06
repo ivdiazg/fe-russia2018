@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChildren } from '@angular/core';
 import { PartidosService } from '../../../services/partidos.service';
+import { FormGroup, FormControl } from '@angular/forms';
+import { DISABLED } from '@angular/forms/src/model';
 
 @Component({
   selector: 'app-partidos-main',
@@ -11,6 +13,7 @@ export class PartidosMainComponent implements OnInit {
   groupMatches: any;
   step = 0;
   @ViewChildren('match') inputs;
+  form = new FormGroup({});
 
   constructor(private partidosService: PartidosService) { }
 
@@ -19,6 +22,22 @@ export class PartidosMainComponent implements OnInit {
     this.partidosService.getGroups().then((res) => {
       this.groupMatches = res;
       console.log(this.groupMatches);
+      let obj = {};
+      for (const group of this.groupMatches) {
+        for (const match of group.matches) {
+          obj[`match${match.idPartido}A`] =
+            new FormControl({
+              value: match.golesA ? match.golesA : match.habilitado ? '0' : ''
+              , disabled: !match.habilitado
+            });
+          obj[`match${match.idPartido}B`] =
+            new FormControl({
+              value: match.golesB ? match.golesB : match.habilitado ? '0' : ''
+              , disabled: !match.habilitado
+            });
+        }
+      }
+      this.form = new FormGroup(obj);
     });
   }
 
@@ -34,14 +53,12 @@ export class PartidosMainComponent implements OnInit {
     this.step--;
   }
 
-  show() {
+  saveResults() {
     for (const group of this.groupMatches) {
-      for (const partido of group.partidos) {
-        if (this.inputs._results.find(x => x.name === `match${partido.idPartido}A`).value) {
-          console.log(`match${partido.idPartido}A`, this.inputs._results.find(x => x.name === `match${partido.idPartido}A`).value);
-        }
-        if (this.inputs._results.find(x => x.name === `match${partido.idPartido}B`).value) {
-          console.log(`match${partido.idPartido}B`, this.inputs._results.find(x => x.name === `match${partido.idPartido}B`).value);
+      for (const match of group.matches) {
+        if (match.habilitado) {
+          console.log(`${match.idPartido}A`, this.form.get(`match${match.idPartido}A`).value);
+          console.log(`${match.idPartido}B`, this.form.get(`match${match.idPartido}B`).value);
         }
       }
     }

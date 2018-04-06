@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-04-2018 a las 23:52:57
+-- Tiempo de generación: 06-04-2018 a las 22:49:45
 -- Versión del servidor: 10.1.31-MariaDB
 -- Versión de PHP: 5.6.34
 
@@ -22,6 +22,36 @@ SET time_zone = "+00:00";
 -- Base de datos: `rusia2018`
 --
 
+DELIMITER $$
+--
+-- Procedimientos
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `groupsEquipos` (IN `grupo` VARCHAR(255), IN `participante` INT)  BEGIN
+	SELECT partidos.idPartido, partidos.fechaPartido, EA.nombre as NombreA
+	, apuestas.golesA, apuestas.golesB, EB.nombre as NombreB, EB.nombre as NombreB
+	, EA.keyname as keynameA, EB.keyname as keynameB, partidos.habilitado
+	FROM partidos
+	INNER JOIN equipopais EA ON partidos.equipoPaisA = EA.idEquipoPais
+	INNER JOIN equipopais EB ON partidos.equipoPaisB = EB.idEquipoPais
+	LEFT JOIN apuestas ON partidos.idPartido = apuestas.partido_apuesta AND apuestas.participante = participante
+	WHERE partidos.equipoPaisA IN (SELECT idEquipoPais FROM equipopais WHERE equipopais.grupo = grupo )
+	OR partidos.equipoPaisB IN (SELECT idEquipoPais FROM equipopais WHERE equipopais.grupo = grupo )
+	ORDER BY partidos.idPartido;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `matchesOfTheDay` (IN `participante` INT)  BEGIN
+    SELECT partidos.idPartido, partidos.fechaPartido, EA.grupo, EA.nombre as NombreA, apuestas.golesA
+    , EB.nombre as NombreB, apuestas.golesB, EA.keyname as keynameA, EB.keyname as keynameB
+    FROM partidos
+    INNER JOIN equipopais EA ON partidos.equipoPaisA = EA.idEquipoPais
+    INNER JOIN equipopais EB ON partidos.equipoPaisB = EB.idEquipoPais
+    LEFT JOIN apuestas ON partidos.idPartido = apuestas.partido_apuesta AND apuestas.participante = participante
+    WHERE partidos.habilitado = 1
+    ORDER BY partidos.idPartido;
+END$$
+
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -38,6 +68,13 @@ CREATE TABLE `apuestas` (
   `participante` int(11) NOT NULL,
   `puntos` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `apuestas`
+--
+
+INSERT INTO `apuestas` (`idApuesta`, `partido_apuesta`, `golesA`, `golesB`, `equipoPaisGanador`, `competicion`, `participante`, `puntos`) VALUES
+(1, 1, 2, 1, 1, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -124,6 +161,13 @@ CREATE TABLE `participantes` (
   `competicion_participante` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `participantes`
+--
+
+INSERT INTO `participantes` (`idParticipante`, `nombre`, `password`, `competicion_participante`) VALUES
+(1, 'Ivan', 'asdf', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -149,13 +193,13 @@ CREATE TABLE `partidos` (
 
 INSERT INTO `partidos` (`idPartido`, `equipoPaisA`, `equipoPaisB`, `competicion_partido`, `golesA`, `golesB`, `equipoPaisGanador`, `fechaPartido`, `datePartido`, `habilitado`) VALUES
 (1, 1, 3, 1, NULL, NULL, NULL, '14-06 11:00', '2018-06-14', 0),
-(2, 2, 4, 1, NULL, NULL, NULL, '15-06 08:00', '2018-06-15', 0),
+(2, 2, 4, 1, NULL, NULL, NULL, '15-06 08:00', '2018-06-15', 1),
 (3, 1, 2, 1, NULL, NULL, NULL, '19-06 14:00', '2018-06-19', 0),
 (4, 4, 3, 1, NULL, NULL, NULL, '20-06 11:00', '2018-06-20', 0),
 (5, 3, 2, 1, NULL, NULL, NULL, '25-06 10:00', '2018-06-25', 0),
 (6, 4, 1, 1, NULL, NULL, NULL, '25-06 10:00', '2018-06-25', 0),
-(7, 7, 8, 1, NULL, NULL, NULL, '15-06 11:00', '2018-06-15', 0),
-(8, 5, 6, 1, NULL, NULL, NULL, '15-06 14:00', '2018-06-15', 0),
+(7, 7, 8, 1, NULL, NULL, NULL, '15-06 11:00', '2018-06-15', 1),
+(8, 5, 6, 1, NULL, NULL, NULL, '15-06 14:00', '2018-06-15', 1),
 (9, 5, 7, 1, NULL, NULL, NULL, '20-06 08:00', '2018-06-20', 0),
 (10, 8, 6, 1, NULL, NULL, NULL, '20-06 14:00', '2018-06-20', 0),
 (11, 8, 5, 1, NULL, NULL, NULL, '25-06 14:00', '2018-06-25', 0),
@@ -249,13 +293,13 @@ ALTER TABLE `partidos`
 -- AUTO_INCREMENT de la tabla `apuestas`
 --
 ALTER TABLE `apuestas`
-  MODIFY `idApuesta` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idApuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `participantes`
 --
 ALTER TABLE `participantes`
-  MODIFY `idParticipante` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idParticipante` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas

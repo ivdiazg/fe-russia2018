@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChildren } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PartidosService } from '../../../services/partidos.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-partidos-del-dia',
@@ -11,7 +12,7 @@ export class PartidosDelDiaComponent implements OnInit {
   cols = 1;
   tiles = [];
   matches = [];
-  @ViewChildren('match') inputs;
+  form = new FormGroup({});
 
   constructor(private partidosService: PartidosService) { }
 
@@ -20,22 +21,27 @@ export class PartidosDelDiaComponent implements OnInit {
       this.cols = res.cols;
       this.tiles = res.tiles;
       this.matches = res.matches;
+      let obj = {};
+      for (const match of res.matches) {
+        obj[`match${match.idPartido}A`] = new FormControl(match.golesA ? match.golesA : '0');
+        obj[`match${match.idPartido}B`] = new FormControl(match.golesB ? match.golesB : '0');
+      }
+      this.form = new FormGroup(obj);
     });
   }
 
   show() {
     for (const partido of this.matches) {
-      if (this.inputs._results.find(x => x.name === `match${partido.idPartido}A`).value) {
-        console.log(`match${partido.idPartido}A`, this.inputs._results.find(x => x.name === `match${partido.idPartido}A`).value);
+      if (this.form.get(`match${partido.idPartido}A`).value) {
+        console.log(`${partido.idPartido}A`, this.form.get(`match${partido.idPartido}A`).value);
       } else {
-        console.log(`match${partido.idPartido}A`, '0');
+        console.log(`${partido.idPartido}A`, '0');
       }
-      if (this.inputs._results.find(x => x.name === `match${partido.idPartido}B`).value) {
-        console.log(`match${partido.idPartido}B`, this.inputs._results.find(x => x.name === `match${partido.idPartido}B`).value);
+      if (this.form.get(`match${partido.idPartido}B`).value) {
+        console.log(`${partido.idPartido}B`, this.form.get(`match${partido.idPartido}B`).value);
       } else {
-        console.log(`match${partido.idPartido}B`, '0');
+        console.log(`${partido.idPartido}B`, '0');
       }
     }
   }
-
 }
