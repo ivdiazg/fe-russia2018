@@ -11,7 +11,7 @@ import { SidebarModule } from './components/sidebar/sidebar.module';
 import { NavbarModule } from './shared/navbar/navbar.module';
 import { FooterModule } from './shared/footer/footer.module';
 import { PartidosMainComponent } from './components/partidos/partidos-main/partidos-main.component';
-import { MatchDayComponent } from './components/matchDay/match-day/match-day.component';
+import { PartidosDelDiaComponent } from './components/partidos/partidos-del-dia/partidos-del-dia.component';
 
 // SERVICE
 import { PartidosService } from './services/partidos.service';
@@ -31,7 +31,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     AppComponent,
     HomeComponent,
     PartidosMainComponent,
-    MatchDayComponent
+    PartidosDelDiaComponent
   ],
   imports: [
     HttpClientModule,

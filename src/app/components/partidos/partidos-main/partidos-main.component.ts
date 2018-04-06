@@ -16,7 +16,7 @@ export class PartidosMainComponent implements OnInit {
 
   ngOnInit() {
 
-    this.partidosService.obtenerGrupos().then((res) => {
+    this.partidosService.getGroups().then((res) => {
       this.groupMatches = res;
       console.log(this.groupMatches);
     });

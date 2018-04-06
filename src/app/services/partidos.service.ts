@@ -7,18 +7,29 @@ export class PartidosService {
 
   constructor(private http: HttpClient) { }
 
-  public obtenerGrupos(): Promise<any> {
+  public getGroups(): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    headers.append('Access-Control-Allow-Origin', '*');
-    headers.append('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-    headers.append('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token');
     return this.http
       .get('http://localhost:1337/groups', { headers })
       .toPromise()
       .then((response) => {
         return response;
       }).catch(() => {
-        console.log('Server error')
+        console.log('Server error');
       });
   }
+
+  public getMatchesDay(): Promise<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http
+      .get('http://localhost:1337/matchesOfTheDay', { headers })
+      .toPromise()
+      .then((response) => {
+        console.log(response);
+        return response;
+      }).catch(() => {
+        console.log('Server error');
+      });
+  }
+
 }
