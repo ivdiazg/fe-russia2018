@@ -1,0 +1,48 @@
+<form [formGroup]="form">
+  <div class="content">
+    <mat-grid-list [cols]="cols" rowHeight="100px">
+      <mat-grid-tile *ngFor="let tile of tiles; let i = index;" [colspan]="tile.colspan" [rowspan]="tile.rowspan" [style.background]="tile.color">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="row text-center">
+            <h4>Grupo {{matches[i].grupo}}</h4>
+          </div>
+          <div class="row">
+            <div class="col-md-3 col-sm-3 col-xs-3">
+              <div class="logo-img pull-right">
+                <img src="../../../assets/img/flags/{{matches[i].keynameA}}.png" width="55px" alt="">
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+              <div class="form-group">
+                <label>{{matches[i].NombreA}}</label>
+                <input type="text" name="match{{matches[i].idPartido}}A" formControlName="match{{matches[i].idPartido}}A" class="form-control border-input inputsGoles">
+                <!-- <input type="text" name="match{{matches[i].idPartido}}A" class="form-control border-input inputsGoles"> -->
+                <!-- <input type="text" [(ngModel)]="[partido.idPartido][partido.keynameA]" class="form-control border-input inputsGoles" placeholder=""> -->
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3 text-center">
+              <div class="form-group">
+                <label>{{matches[i].NombreB}}</label>
+                <input type="text" name="match{{matches[i].idPartido}}A" formControlName="match{{matches[i].idPartido}}B" class="form-control border-input inputsGoles">
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3">
+              <div class="logo-img pull-left">
+                <img src="../../../assets/img/flags/{{matches[i].keynameB}}.png" width="55px" alt="">
+              </div>
+            </div>
+          </div>
+          <div class="row text-center">
+            <label>Fecha partido: {{matches[i].fechaPartido}}</label>
+          </div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <br>
+    <br>
+    <div class="row col-md-offset-4 col-md-4 col-sm-offset-4 col-sm-4 col-xs-offset-4 col-xs-4">
+      <button class="btn btn-primary btn-block btn-fill btn-wd" (click)="show()">Guardar</button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</form>

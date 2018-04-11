@@ -1,7 +1,10 @@
-import { Component, OnInit, ViewChildren } from '@angular/core';
+import { Component, Inject, OnInit, ViewChildren } from '@angular/core';
 import { PartidosService } from '../../../services/partidos.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { DISABLED } from '@angular/forms/src/model';
+import { GroupsMatches } from '../../model/partido.model';
+import { ApuestaMatchReqModel } from '../../model/apuestaMatch.model';
+import { UtilService } from '../../../services/util.service';
 
 @Component({
   selector: 'app-partidos-main',
@@ -10,15 +13,15 @@ import { DISABLED } from '@angular/forms/src/model';
 })
 export class PartidosMainComponent implements OnInit {
 
-  groupMatches: any;
+  groupMatches: GroupsMatches[];
   step = 0;
   @ViewChildren('match') inputs;
   form = new FormGroup({});
 
-  constructor(private partidosService: PartidosService) { }
+  constructor(private partidosService: PartidosService
+    , private utilService: UtilService) { }
 
   ngOnInit() {
-
     this.partidosService.getGroups().then((res) => {
       this.groupMatches = res;
       console.log(this.groupMatches);
@@ -54,13 +57,30 @@ export class PartidosMainComponent implements OnInit {
   }
 
   saveResults() {
+    let APUESTA_MATCH_GROUP = [];
+    let APUESTAS_MATCHES: ApuestaMatchReqModel[] = [];
     for (const group of this.groupMatches) {
-      for (const match of group.matches) {
-        if (match.habilitado) {
-          console.log(`${match.idPartido}A`, this.form.get(`match${match.idPartido}A`).value);
-          console.log(`${match.idPartido}B`, this.form.get(`match${match.idPartido}B`).value);
-        }
-      }
+      APUESTA_MATCH_GROUP = group.matches.filter(x => x.habilitado === 1);
+      APUESTA_MATCH_GROUP.forEach(match => {
+        const APUESTA = new ApuestaMatchReqModel;
+        APUESTA.idPartido = match.idPartido;
+        APUESTA.golesA = this.form.get(`match${match.idPartido}A`).value;
+        APUESTA.golesB = this.form.get(`match${match.idPartido}B`).value;
+        APUESTA.competicion = match.competicion_partido;
+        APUESTA.participante = 1; // participante en session storage
+        APUESTAS_MATCHES.push(APUESTA);
+      });
     }
+    this.partidosService.updApuestaMatch(APUESTAS_MATCHES)
+      .then((res) => {
+        if (res.indexOf(false) !== -1) {
+          this.utilService.showNotification('danger', 'ti-alert', 'Ha ocurrido un error. Comuniquese con el admin.', 'bottom', 'right');
+        } else {
+          this.utilService.showNotification('success', 'ti-check-box', 'Datos almacenados correctamente!', 'bottom', 'right');
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 }

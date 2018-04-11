@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { ApuestaMatchReqModel } from '../components/model/apuestaMatch.model';
 
 @Injectable()
 export class PartidosService {
@@ -32,4 +33,15 @@ export class PartidosService {
       });
   }
 
+  public updApuestaMatch(apuestasMatches: ApuestaMatchReqModel[]): Promise<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http
+      .post('http://localhost:1337/updApuestaMatch', apuestasMatches, { headers })
+      .toPromise()
+      .then((response) => {
+        return response;
+      }).catch(() => {
+        console.log('Server error');
+      });
+  }
 }
