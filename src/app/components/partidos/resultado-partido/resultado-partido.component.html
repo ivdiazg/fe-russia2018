@@ -15,7 +15,8 @@
             <div class="col-md-3 col-sm-3 col-xs-3 text-center">
               <div class="form-group">
                 <label>{{matches[i].NombreA}}</label>
-                <input type="text" name="match{{matches[i].idPartido}}A" formControlName="match{{matches[i].idPartido}}A" class="form-control border-input inputsGoles">
+                <input type="text" myNumberOnly maxlength="2" name="match{{matches[i].idPartido}}A" formControlName="match{{matches[i].idPartido}}A"
+                  class="form-control border-input inputsGoles">
                 <!-- <input type="text" name="match{{matches[i].idPartido}}A" class="form-control border-input inputsGoles"> -->
                 <!-- <input type="text" [(ngModel)]="[partido.idPartido][partido.keynameA]" class="form-control border-input inputsGoles" placeholder=""> -->
               </div>
@@ -23,7 +24,7 @@
             <div class="col-md-3 col-sm-3 col-xs-3 text-center">
               <div class="form-group">
                 <label>{{matches[i].NombreB}}</label>
-                <input type="text" name="match{{matches[i].idPartido}}A" formControlName="match{{matches[i].idPartido}}B" class="form-control border-input inputsGoles">
+                <input type="text" myNumberOnly maxlength="2" name="match{{matches[i].idPartido}}A" formControlName="match{{matches[i].idPartido}}B" class="form-control border-input inputsGoles">
               </div>
             </div>
             <div class="col-md-3 col-sm-3 col-xs-3">
@@ -41,7 +42,7 @@
     <br>
     <br>
     <div class="row col-md-offset-4 col-md-4 col-sm-offset-4 col-sm-4 col-xs-offset-4 col-xs-4">
-      <button class="btn btn-primary btn-block btn-fill btn-wd" (click)="show()">Guardar</button>
+      <button class="btn btn-primary btn-block btn-fill btn-wd" (click)="saveResults()">Guardar</button>
     </div>
     <div class="clearfix"></div>
   </div>

@@ -28,8 +28,8 @@ import { FooterModule } from './shared/footer/footer.module';
 import { PartidosMainComponent } from './components/partidos/partidos-main/partidos-main.component';
 import { PartidosDelDiaComponent } from './components/partidos/partidos-del-dia/partidos-del-dia.component';
 import { ResultadoPartidoComponent } from './components/partidos/resultado-partido/resultado-partido.component';
-
-
+import { NumberOnlyDirective } from './shared/directives/number-only.directive';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +37,9 @@ import { ResultadoPartidoComponent } from './components/partidos/resultado-parti
     HomeComponent,
     PartidosMainComponent,
     PartidosDelDiaComponent,
-    ResultadoPartidoComponent
+    ResultadoPartidoComponent,
+    NumberOnlyDirective,
+    LoginComponent
   ],
   imports: [
     HttpClientModule,

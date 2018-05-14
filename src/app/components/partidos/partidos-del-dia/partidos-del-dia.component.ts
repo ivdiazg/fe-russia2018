@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { PartidosService } from '../../../services/partidos.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ApuestaMatchReqModel } from '../../model/apuestaMatch.model';
+import { ApuestaResultMatchReqModel } from '../../model/apuestaMatch.model';
 import { UtilService } from '../../../services/util.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-partidos-del-dia',
@@ -17,9 +18,14 @@ export class PartidosDelDiaComponent implements OnInit {
   form = new FormGroup({});
 
   constructor(private partidosService: PartidosService
-    , private utilService: UtilService) { }
+    , private utilService: UtilService
+    , public router: Router) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem('idParticipante')) {
+      this.router.navigate(['/login']);
+      return;
+    }
     this.partidosService.getMatchesDay().then((res) => {
       this.cols = res.cols;
       this.tiles = res.tiles;
@@ -34,9 +40,9 @@ export class PartidosDelDiaComponent implements OnInit {
   }
 
   show() {
-    let apuestasMatches: ApuestaMatchReqModel[] = [];
+    let apuestasMatches: ApuestaResultMatchReqModel[] = [];
     for (const partido of this.matches) {
-      const apuestaMatch = new ApuestaMatchReqModel;
+      const apuestaMatch = new ApuestaResultMatchReqModel;
       apuestaMatch.idPartido = partido.idPartido;
       apuestaMatch.golesA = this.form.get(`match${partido.idPartido}A`).value;
       apuestaMatch.golesB = this.form.get(`match${partido.idPartido}B`).value;
@@ -55,13 +61,5 @@ export class PartidosDelDiaComponent implements OnInit {
       }).catch((err) => {
         console.error(err);
       });
-
-
-    // if (this.form.get(`match${partido.idPartido}A`).value) {
-    //   console.log(`${partido.idPartido}A`, this.form.get(`match${partido.idPartido}A`).value);
-    // }
-    // if (this.form.get(`match${partido.idPartido}B`).value) {
-    //   console.log(`${partido.idPartido}B`, this.form.get(`match${partido.idPartido}B`).value);
-    // }
   }
 }

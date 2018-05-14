@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { ApuestaMatchReqModel } from '../components/model/apuestaMatch.model';
+import { ApuestaResultMatchReqModel, ApuestaModel } from '../components/model/apuestaMatch.model';
 
 @Injectable()
 export class PartidosService {
@@ -26,17 +26,67 @@ export class PartidosService {
       .get('http://localhost:1337/matchesOfTheDay', { headers })
       .toPromise()
       .then((response) => {
-        console.log(response);
         return response;
       }).catch(() => {
         console.log('Server error');
       });
   }
 
-  public updApuestaMatch(apuestasMatches: ApuestaMatchReqModel[]): Promise<any> {
+  public selMatchForResult(): Promise<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http
+      .get('http://localhost:1337/selMatchForResult', { headers })
+      .toPromise()
+      .then((response) => {
+        return response;
+      }).catch(() => {
+        console.log('Server error');
+      });
+  }
+
+  public updApuestaMatch(apuestasMatches: ApuestaResultMatchReqModel[]): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
       .post('http://localhost:1337/updApuestaMatch', apuestasMatches, { headers })
+      .toPromise()
+      .then((response) => {
+        return response;
+      }).catch(() => {
+        console.log('Server error');
+      });
+  }
+
+  public updPuntajeApuesta(puntajesApuestas: ApuestaModel[]): Promise<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http
+      .post('http://localhost:1337/updPuntajeApuesta', puntajesApuestas, { headers })
+      .toPromise()
+      .then((response) => {
+        return response;
+      }).catch(() => {
+        console.log('Server error');
+      });
+  }
+
+  public updResultMatch(resultsMatches: ApuestaResultMatchReqModel[]): Promise<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http
+      .post('http://localhost:1337/updResultMatch', resultsMatches, { headers })
+      .toPromise()
+      .then((response) => {
+        return response;
+      }).catch(() => {
+        console.log('Server error');
+      });
+  }
+
+  public selApuestasMatch(idMatch): Promise<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const REQUEST = {
+      partido: idMatch
+    }
+    return this.http
+      .post('http://localhost:1337/selApuestasMatch', REQUEST, { headers })
       .toPromise()
       .then((response) => {
         return response;

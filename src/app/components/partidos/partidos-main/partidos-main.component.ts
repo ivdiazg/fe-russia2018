@@ -3,8 +3,9 @@ import { PartidosService } from '../../../services/partidos.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { DISABLED } from '@angular/forms/src/model';
 import { GroupsMatches } from '../../model/partido.model';
-import { ApuestaMatchReqModel } from '../../model/apuestaMatch.model';
+import { ApuestaResultMatchReqModel } from '../../model/apuestaMatch.model';
 import { UtilService } from '../../../services/util.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-partidos-main',
@@ -19,12 +20,17 @@ export class PartidosMainComponent implements OnInit {
   form = new FormGroup({});
 
   constructor(private partidosService: PartidosService
-    , private utilService: UtilService) { }
+    , private utilService: UtilService
+    , public router: Router) { }
 
   ngOnInit() {
+    // if (!sessionStorage.getItem('idParticipante')) {
+    //   console.log('entro');
+    //   this.router.navigate(['/login']);
+    //   return;
+    // }
     this.partidosService.getGroups().then((res) => {
       this.groupMatches = res;
-      console.log(this.groupMatches);
       let obj = {};
       for (const group of this.groupMatches) {
         for (const match of group.matches) {
@@ -58,11 +64,11 @@ export class PartidosMainComponent implements OnInit {
 
   saveResults() {
     let APUESTA_MATCH_GROUP = [];
-    let APUESTAS_MATCHES: ApuestaMatchReqModel[] = [];
+    let APUESTAS_MATCHES: ApuestaResultMatchReqModel[] = [];
     for (const group of this.groupMatches) {
       APUESTA_MATCH_GROUP = group.matches.filter(x => x.habilitado === 1);
       APUESTA_MATCH_GROUP.forEach(match => {
-        const APUESTA = new ApuestaMatchReqModel;
+        const APUESTA = new ApuestaResultMatchReqModel;
         APUESTA.idPartido = match.idPartido;
         APUESTA.golesA = this.form.get(`match${match.idPartido}A`).value;
         APUESTA.golesB = this.form.get(`match${match.idPartido}B`).value;
