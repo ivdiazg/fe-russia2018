@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { ApuestaResultMatchReqModel, ApuestaModel } from '../components/model/apuestaMatch.model';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class PartidosService {
@@ -11,7 +12,7 @@ export class PartidosService {
   public getGroups(participante: Number): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .post('http://localhost:1337/groups', { participante: participante }, { headers })
+      .post(environment.ENDPOINT_BACK + 'groups', { participante: participante }, { headers })
       .toPromise()
       .then((response) => {
         return response;
@@ -23,7 +24,7 @@ export class PartidosService {
   public getMatchesDay(participante: Number): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .post('http://localhost:1337/matchesOfTheDay', { participante: participante }, { headers })
+      .post(environment.ENDPOINT_BACK + 'matchesOfTheDay', { participante: participante }, { headers })
       .toPromise()
       .then((response) => {
         return response;
@@ -35,7 +36,7 @@ export class PartidosService {
   public selMatchForResult(): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .get('http://localhost:1337/selMatchForResult', { headers })
+      .get(environment.ENDPOINT_BACK + 'selMatchForResult', { headers })
       .toPromise()
       .then((response) => {
         return response;
@@ -47,7 +48,7 @@ export class PartidosService {
   public updApuestaMatch(apuestasMatches: ApuestaResultMatchReqModel[]): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .post('http://localhost:1337/updApuestaMatch', apuestasMatches, { headers })
+      .post(environment.ENDPOINT_BACK + 'updApuestaMatch', apuestasMatches, { headers })
       .toPromise()
       .then((response) => {
         return response;
@@ -59,7 +60,7 @@ export class PartidosService {
   public updPuntajeApuesta(puntajesApuestas: ApuestaModel[]): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .post('http://localhost:1337/updPuntajeApuesta', puntajesApuestas, { headers })
+      .post(environment.ENDPOINT_BACK + 'updPuntajeApuesta', puntajesApuestas, { headers })
       .toPromise()
       .then((response) => {
         return response;
@@ -71,7 +72,7 @@ export class PartidosService {
   public updResultMatch(resultsMatches: ApuestaResultMatchReqModel[]): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .post('http://localhost:1337/updResultMatch', resultsMatches, { headers })
+      .post(environment.ENDPOINT_BACK + 'updResultMatch', resultsMatches, { headers })
       .toPromise()
       .then((response) => {
         return response;
@@ -86,7 +87,7 @@ export class PartidosService {
       partido: idMatch
     }
     return this.http
-      .post('http://localhost:1337/selApuestasMatch', REQUEST, { headers })
+      .post(environment.ENDPOINT_BACK + 'selApuestasMatch', REQUEST, { headers })
       .toPromise()
       .then((response) => {
         return response;

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class EstadisticasService {
@@ -9,7 +10,7 @@ export class EstadisticasService {
   public statsParticipantes(): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .get('http://localhost:1337/statsParticipantes', { headers })
+      .get(environment.ENDPOINT_BACK + 'statsParticipantes', { headers })
       .toPromise()
       .then((response) => {
         return response;
@@ -21,7 +22,7 @@ export class EstadisticasService {
   public resultadoExactoParticipante(participante: number): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .post('http://localhost:1337/resultadoExactoParticipante', { participante: participante }, { headers })
+      .post(environment.ENDPOINT_BACK + 'resultadoExactoParticipante', { participante: participante }, { headers })
       .toPromise()
       .then((response) => {
         return response;
@@ -33,7 +34,7 @@ export class EstadisticasService {
   public countParticipantes(): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .get('http://localhost:1337/countParticipantes', { headers })
+      .get(environment.ENDPOINT_BACK + 'countParticipantes', { headers })
       .toPromise()
       .then((response) => {
         return response;
