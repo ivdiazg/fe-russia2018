@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 export class ResultadoPartidoComponent implements OnInit {
 
   cols = 1;
+  usuarioPermitido = 1;
   tiles = [];
   matches = [];
   form = new FormGroup({});
@@ -23,7 +24,7 @@ export class ResultadoPartidoComponent implements OnInit {
     , public router: Router) { }
 
   ngOnInit() {
-    if (sessionStorage.getItem('idParticipante')) {
+    if (Number(sessionStorage.getItem('idParticipante')) !== 1) {
       this.router.navigate(['/login']);
       return;
     }
@@ -56,7 +57,7 @@ export class ResultadoPartidoComponent implements OnInit {
         resultMatch.equipoPaisGanador = null;
       }
       resultMatch.competicion = partido.competicion_partido;
-      resultMatch.participante = 1; // participante en session storage
+      resultMatch.participante = Number(sessionStorage.getItem('idParticipante')); // participante en session storage
       resultsMatches.push(resultMatch);
     }
 
@@ -77,47 +78,53 @@ export class ResultadoPartidoComponent implements OnInit {
   }
 
   setPuntajeMatches(resultsMatches: ApuestaResultMatchReqModel[]) {
+    let promises = [];
     resultsMatches.forEach(match => {
-      this.getApuestasByMatch(match.idPartido).then((res) => {
-        console.log(res);
-      });
+      promises.push(this.getApuestasByMatch(match.idPartido));
     });
+    Promise.all(promises).then((res) => {
+      if (res.indexOf(false) !== -1) {
+        this.utilService.showNotification('danger', 'ti-alert', `Ha ocurrido un error. Comuniquese con el admin.`, 'bottom', 'right');
+      } else {
+        this.utilService.showNotification('success', 'ti-check-box', `Puntajes calculados con éxito!`, 'bottom', 'right');
+      }
+    })
   }
 
-  getApuestasByMatch(idMatch) {
+  async getApuestasByMatch(idMatch) {
     let puntajesApuestas: ApuestaModel[] = [];
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
       this.partidosService.selApuestasMatch(idMatch).then((res: ApuestaModel[]) => {
         res.forEach(apuesta => {
           let resultMatch = this.resultsMatches.find(x => x.idPartido === idMatch);
           let puntos = 0;
           if (apuesta.golesA === resultMatch.golesA && apuesta.golesB === resultMatch.golesB) {
-            let puntos = 5;
+            puntos = 3;
           } else if (apuesta.equipoPaisGanador === resultMatch.equipoPaisGanador) {
-            let puntos = 3;
+            puntos = 1;
           } else {
-            let puntos = 0;
+            puntos = 0;
           }
           const puntajeApuesta = new ApuestaModel;
           puntajeApuesta.partido_apuesta = resultMatch.idPartido;
-          puntajeApuesta.participante = 1; // participante en session storage
+          puntajeApuesta.participante = apuesta.participante;
           puntajeApuesta.puntos = puntos;
           puntajesApuestas.push(puntajeApuesta);
         });
-        console.log(puntajesApuestas);
 
         this.partidosService.updPuntajeApuesta(puntajesApuestas)
           .then((res) => {
-            console.log(res);
             if (res.indexOf(false) !== -1) {
               this.utilService.showNotification('danger', 'ti-alert', `Ha ocurrido un error. Comuniquese con el admin.`, 'bottom', 'right');
+              resolve(false);
             } else {
               this.utilService.showNotification('success', 'ti-check-box', `Datos de partido ${puntajesApuestas[0].partido_apuesta} almacenados correctamente!`, 'bottom', 'right');
+              resolve(true);
             }
           }).catch((err) => {
             console.error(err);
           });
-      })
+      });
     });
   }
 }

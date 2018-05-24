@@ -30,6 +30,8 @@ import { PartidosDelDiaComponent } from './components/partidos/partidos-del-dia/
 import { ResultadoPartidoComponent } from './components/partidos/resultado-partido/resultado-partido.component';
 import { NumberOnlyDirective } from './shared/directives/number-only.directive';
 import { LoginComponent } from './components/login/login.component';
+import { LoginService } from './services/login.service';
+import { EstadisticasService } from './services/estadisticas.service';
 
 @NgModule({
   declarations: [
@@ -63,6 +65,8 @@ import { LoginComponent } from './components/login/login.component';
   ],
   providers: [
     PartidosService,
+    LoginService,
+    EstadisticasService,
     UtilService],
   bootstrap: [AppComponent],
   entryComponents: []

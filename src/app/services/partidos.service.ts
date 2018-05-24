@@ -8,10 +8,10 @@ export class PartidosService {
 
   constructor(private http: HttpClient) { }
 
-  public getGroups(): Promise<any> {
+  public getGroups(participante: Number): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .get('http://localhost:1337/groups', { headers })
+      .post('http://localhost:1337/groups', { participante: participante }, { headers })
       .toPromise()
       .then((response) => {
         return response;
@@ -20,10 +20,10 @@ export class PartidosService {
       });
   }
 
-  public getMatchesDay(): Promise<any> {
+  public getMatchesDay(participante: Number): Promise<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .get('http://localhost:1337/matchesOfTheDay', { headers })
+      .post('http://localhost:1337/matchesOfTheDay', { participante: participante }, { headers })
       .toPromise()
       .then((response) => {
         return response;

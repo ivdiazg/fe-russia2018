@@ -24,12 +24,11 @@ export class PartidosMainComponent implements OnInit {
     , public router: Router) { }
 
   ngOnInit() {
-    // if (!sessionStorage.getItem('idParticipante')) {
-    //   console.log('entro');
-    //   this.router.navigate(['/login']);
-    //   return;
-    // }
-    this.partidosService.getGroups().then((res) => {
+    if (!sessionStorage.getItem('idParticipante')) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.partidosService.getGroups(Number(sessionStorage.getItem('idParticipante'))).then((res) => {
       this.groupMatches = res;
       let obj = {};
       for (const group of this.groupMatches) {
@@ -73,7 +72,7 @@ export class PartidosMainComponent implements OnInit {
         APUESTA.golesA = this.form.get(`match${match.idPartido}A`).value;
         APUESTA.golesB = this.form.get(`match${match.idPartido}B`).value;
         APUESTA.competicion = match.competicion_partido;
-        APUESTA.participante = 1; // participante en session storage
+        APUESTA.participante = Number(sessionStorage.getItem('idParticipante')); // participante en session storage
         APUESTAS_MATCHES.push(APUESTA);
       });
     }

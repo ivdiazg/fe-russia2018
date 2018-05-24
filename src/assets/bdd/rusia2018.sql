@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-05-2018 a las 16:04:03
+-- Tiempo de generación: 24-05-2018 a las 23:37:06
 -- Versión del servidor: 10.1.31-MariaDB
 -- Versión de PHP: 5.6.34
 
@@ -26,6 +26,12 @@ DELIMITER $$
 --
 -- Procedimientos
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `autenticaUsuario` (IN `username` VARCHAR(1024), IN `pass` VARCHAR(2048))  BEGIN
+	DECLARE autenticado INT;
+   	SET autenticado = (SELECT p.idParticipante FROM participantes p WHERE p.nombre = username AND p.password = pass);
+    SELECT autenticado;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `groupsEquipos` (IN `grupo` VARCHAR(255), IN `participante` INT)  BEGIN
 	SELECT partidos.idPartido, partidos.fechaPartido, EA.nombre as NombreA
 	, apuestas.golesA, apuestas.golesB, EB.nombre as NombreB, EB.nombre as NombreB
@@ -50,6 +56,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `matchesOfTheDay` (IN `participante`
     WHERE partidos.habilitado = 1
     ORDER BY partidos.idPartido;
 
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `resultadoExactoParticipante` (IN `participante` INT)  BEGIN
+	SELECT COUNT(1) as exactos
+    FROM apuestas a
+    WHERE a.participante = participante
+    AND a.competicion = 1
+    AND a.puntos = 3;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `selApuestasMatch` (IN `partido` INT)  BEGIN
@@ -77,6 +91,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `selMatchForResult` ()  BEGIN
     WHERE partidos.habilitado = 1
     ORDER BY partidos.idPartido;
 
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `statsParticipantes` ()  BEGIN
+	SELECT SUM(a.puntos) as puntaje, a.participante, p.nombre
+    FROM apuestas a
+    INNER JOIN participantes p ON p.idParticipante = a.participante
+    WHERE a.competicion = 1
+    GROUP BY a.participante, p.nombre;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updApuestaMatch` (`partido` INT, `golesA` INT, `golesB` INT, `competicion` INT, `participante` INT)  BEGIN
@@ -119,7 +141,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updPuntajeApuesta` (`partido` INT, 
     AND a.participante = participante;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updResultMatch` (IN `partido` INT, IN `golesA` INT, IN `golesB` INT, IN `competicion` INT, IN `participante` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updResultMatch` (IN `partido` INT, IN `golesA` INT, IN `golesB` INT, IN `competicion` INT)  BEGIN
 
 	DECLARE equipoPaisWinner INT;
     IF golesA > golesB THEN
@@ -134,7 +156,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updResultMatch` (IN `partido` INT, 
 	SET golesA = golesA,
     golesB = golesB,
     equipoPaisGanador = equipoPaisWinner
-    -- , habilitado = 0
+     , habilitado = 0
 	WHERE idPartido = partido;
 
 END$$
@@ -163,8 +185,10 @@ CREATE TABLE `apuestas` (
 --
 
 INSERT INTO `apuestas` (`idApuesta`, `partido_apuesta`, `golesA`, `golesB`, `equipoPaisGanador`, `competicion`, `participante`, `puntos`) VALUES
-(1, 1, 3, 1, 1, 1, 1, 0),
-(14, 2, 1, 3, 4, 1, 1, 0);
+(1, 1, 3, 0, 1, 1, 1, 1),
+(14, 2, 2, 1, 2, 1, 1, 3),
+(15, 1, 2, 0, 1, 1, 2, 1),
+(16, 2, 1, 1, NULL, 1, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -247,16 +271,19 @@ INSERT INTO `equipopais` (`idEquipoPais`, `nombre`, `keyName`, `grupo`, `competi
 CREATE TABLE `participantes` (
   `idParticipante` int(11) NOT NULL,
   `nombre` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `competicion_participante` int(11) NOT NULL
+  `password` varchar(2048) COLLATE utf8_unicode_ci NOT NULL,
+  `competicion_participante` int(11) NOT NULL,
+  `habilitado` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `participantes`
 --
 
-INSERT INTO `participantes` (`idParticipante`, `nombre`, `password`, `competicion_participante`) VALUES
-(1, 'Ivan', 'asdf', 1);
+INSERT INTO `participantes` (`idParticipante`, `nombre`, `password`, `competicion_participante`, `habilitado`) VALUES
+(1, 'idigonza', 'SWQ4NjE4NDY4Nw==', 1, 1),
+(2, 'pponcezu', 'MTIzNDU2Nzg=', 1, 1),
+(3, 'cmonroya', 'MTIzNDEyMzQ=', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -282,8 +309,8 @@ CREATE TABLE `partidos` (
 --
 
 INSERT INTO `partidos` (`idPartido`, `equipoPaisA`, `equipoPaisB`, `competicion_partido`, `golesA`, `golesB`, `equipoPaisGanador`, `fechaPartido`, `datePartido`, `habilitado`) VALUES
-(1, 1, 3, 1, 1, 1, NULL, '14-06 11:00', '2018-06-14', 1),
-(2, 2, 4, 1, 1, 3, 4, '15-06 08:00', '2018-06-15', 1),
+(1, 1, 3, 1, 1, 0, 1, '14-06 11:00', '2018-06-14', 1),
+(2, 2, 4, 1, 2, 1, 2, '15-06 08:00', '2018-06-15', 1),
 (3, 1, 2, 1, NULL, NULL, NULL, '19-06 14:00', '2018-06-19', 0),
 (4, 4, 3, 1, NULL, NULL, NULL, '20-06 11:00', '2018-06-20', 0),
 (5, 3, 2, 1, NULL, NULL, NULL, '25-06 10:00', '2018-06-25', 0),
@@ -381,13 +408,13 @@ ALTER TABLE `partidos`
 -- AUTO_INCREMENT de la tabla `apuestas`
 --
 ALTER TABLE `apuestas`
-  MODIFY `idApuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `idApuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `participantes`
 --
 ALTER TABLE `participantes`
-  MODIFY `idParticipante` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idParticipante` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas

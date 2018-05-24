@@ -22,11 +22,11 @@ export class PartidosDelDiaComponent implements OnInit {
     , public router: Router) { }
 
   ngOnInit() {
-    if (sessionStorage.getItem('idParticipante')) {
+    if (!sessionStorage.getItem('idParticipante')) {
       this.router.navigate(['/login']);
       return;
     }
-    this.partidosService.getMatchesDay().then((res) => {
+    this.partidosService.getMatchesDay(Number(sessionStorage.getItem('idParticipante'))).then((res) => {
       this.cols = res.cols;
       this.tiles = res.tiles;
       this.matches = res.matches;
@@ -47,7 +47,7 @@ export class PartidosDelDiaComponent implements OnInit {
       apuestaMatch.golesA = this.form.get(`match${partido.idPartido}A`).value;
       apuestaMatch.golesB = this.form.get(`match${partido.idPartido}B`).value;
       apuestaMatch.competicion = partido.competicion_partido;
-      apuestaMatch.participante = 1; // participante en session storage
+      apuestaMatch.participante = Number(sessionStorage.getItem('idParticipante')); // participante en session storage
       apuestasMatches.push(apuestaMatch);
     }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as Chartist from 'chartist';
 import { Router } from '@angular/router';
+import { EstadisticasService } from '../../services/estadisticas.service';
 
 @Component({
   selector: 'app-home',
@@ -9,101 +10,98 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(public router: Router) { }
+  labelsGral: string[] = [];
+  seriesGral: Number[] = [];
+  labelsTop: string[] = [];
+  seriesTop: Number[] = [];
+  participants: number;
+  resultEstadisticas: any;
+  position: number;
+  points: number;
+  resultadoExacto: number;
+
+  constructor(public router: Router
+    , private estadisticasService: EstadisticasService) { }
 
   ngOnInit() {
-    if (sessionStorage.getItem('idParticipante')) {
+    if (!sessionStorage.getItem('idParticipante')) {
       this.router.navigate(['/login']);
       return;
     }
-    var dataSales = {
-      labels: ['9:00AM', '12:00AM', '3:00PM', '6:00PM', '9:00PM', '12:00PM', '3:00AM', '6:00AM'],
-      series: [
-        [287, 385, 490, 562, 594, 626, 698, 895, 952],
-        [67, 152, 193, 240, 387, 435, 535, 642, 744],
-        [23, 113, 67, 108, 190, 239, 307, 410, 410]
-      ]
-    };
 
-    var optionsSales = {
-      low: 0,
-      high: 1000,
-      showArea: true,
-      height: "245px",
-      axisX: {
-        showGrid: false,
-      },
-      lineSmooth: Chartist.Interpolation.simple({
-        divisor: 3
-      }),
-      showLine: true,
-      showPoint: false,
-    };
-
-    var responsiveSales: any[] = [
-      ['screen and (max-width: 640px)', {
-        axisX: {
-          labelInterpolationFnc: function (value) {
-            return value[0];
-          }
+    this.estadisticasService.statsParticipantes().then((res) => {
+      this.resultEstadisticas = res;
+      this.generaEstadisticasGral(this.resultEstadisticas).then(() => {
+        this.position = this.resultEstadisticas.map(x => x.participante).indexOf(Number(sessionStorage.getItem('idParticipante'))) + 1;
+        if (this.position !== -1) {
+          this.points = this.resultEstadisticas[this.position - 1].puntaje;
+          this.estadisticasService.resultadoExactoParticipante(Number(sessionStorage.getItem('idParticipante')))
+            .then(res => {
+              this.resultadoExacto = res.exactos;
+            });
+          this.estadisticasService.countParticipantes().then((res) => {
+            console.log(res);
+            this.participants = res.participantes;
+          });
         }
-      }]
-    ];
+        new Chartist.Bar('#chartGeneral', {
+          labels: this.labelsGral, // ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
+          series: this.seriesGral // [1, 2, 3, 4, 5, 6, 7, 8, 9, 30, 31, 31, 33, 34]
+        }, {
+            distributeSeries: true,
+            axisY: {
+              onlyInteger: true,
+            }
+          });
+      }).catch((err) => {
 
-    new Chartist.Line('#chartHours', dataSales, optionsSales, responsiveSales);
+      });
 
+      res = res.sort(function (a, b) { return (a.puntaje > b.puntaje) ? 1 : ((b.puntaje > a.puntaje) ? -1 : 0); })
+        .reverse().slice(0, 5);
+      this.generaEstadisticasTop(res).then(() => {
+        new Chartist.Bar('#chartTop', {
+          labels: this.labelsTop,
+          series: [this.seriesTop]
+        }, {
+            seriesBarDistance: 10,
+            reverseData: true,
+            horizontalBars: true,
+            axisX: {
+              onlyInteger: true,
+            },
+            axisY: {
+              offset: 70
+            }
+          });
+      });
+    });
 
-    var data = {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      series: [
-        [542, 543, 520, 680, 653, 753, 326, 434, 568, 610, 756, 895],
-        [230, 293, 380, 480, 503, 553, 600, 664, 698, 710, 736, 795]
-      ]
-    };
+    // new Chartist.Bar('#chartGeneral', {
+    //   labels: this.labelsGral, // ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
+    //   series: this.seriesGral // [1, 2, 3, 4, 5, 6, 7, 8, 9, 30, 31, 31, 33, 34]
+    // }, {
+    //     distributeSeries: true
+    //   });
+  }
 
-    var options = {
-      seriesBarDistance: 10,
-      axisX: {
-        showGrid: false
-      },
-      height: "245px"
-    };
+  generaEstadisticasGral(res: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      res.forEach(row => {
+        this.labelsGral.push(row.nombre);
+        this.seriesGral.push(row.puntaje !== null ? row.puntaje : 0);
+      });
+      resolve();
+    });
+  }
 
-    var responsiveOptions: any[] = [
-      ['screen and (max-width: 640px)', {
-        seriesBarDistance: 5,
-        axisX: {
-          labelInterpolationFnc: function (value) {
-            return value[0];
-          }
-        }
-      }]
-    ];
-
-    new Chartist.Line('#chartActivity', data, options, responsiveOptions);
-
-    var dataPreferences = {
-      series: [
-        [25, 30, 20, 25]
-      ]
-    };
-
-    var optionsPreferences = {
-      donut: true,
-      donutWidth: 40,
-      startAngle: 0,
-      total: 100,
-      showLabel: false,
-      axisX: {
-        showGrid: false
-      }
-    };
-
-    new Chartist.Pie('#chartPreferences', dataPreferences, optionsPreferences);
-
-    new Chartist.Pie('#chartPreferences', {
-      labels: ['62%', '32%', '6%'],
-      series: [62, 32, 6]
+  generaEstadisticasTop(res: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      res.forEach(row => {
+        this.labelsTop.push(row.nombre);
+        this.seriesTop.push(row.puntaje !== null ? row.puntaje : 0);
+      });
+      resolve();
     });
   }
 
