@@ -33,14 +33,13 @@ export class HomeComponent implements OnInit {
       this.resultEstadisticas = res;
       this.generaEstadisticasGral(this.resultEstadisticas).then(() => {
         this.position = this.resultEstadisticas.map(x => x.participante).indexOf(Number(sessionStorage.getItem('idParticipante'))) + 1;
-        if (this.position !== -1) {
+        if (this.position - 1 !== -1) {
           this.points = this.resultEstadisticas[this.position - 1].puntaje;
           this.estadisticasService.resultadoExactoParticipante(Number(sessionStorage.getItem('idParticipante')))
             .then(res => {
               this.resultadoExacto = res.exactos;
             });
           this.estadisticasService.countParticipantes().then((res) => {
-            console.log(res);
             this.participants = res.participantes;
           });
         }

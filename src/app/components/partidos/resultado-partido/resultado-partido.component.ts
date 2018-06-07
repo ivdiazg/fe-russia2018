@@ -24,7 +24,8 @@ export class ResultadoPartidoComponent implements OnInit {
     , public router: Router) { }
 
   ngOnInit() {
-    if (Number(sessionStorage.getItem('idParticipante')) !== 1) {
+    console.log(sessionStorage.getItem('idParticipante'));
+    if (Number(sessionStorage.getItem('idParticipante')) !== this.usuarioPermitido) {
       this.router.navigate(['/login']);
       return;
     }

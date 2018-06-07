@@ -13,6 +13,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 // SERVICE
 import { PartidosService } from './services/partidos.service';
@@ -48,6 +50,7 @@ import { EstadisticasService } from './services/estadisticas.service';
     FormsModule,
     MatDialogModule,
     MatGridListModule,
+    MatTooltipModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatTabsModule,

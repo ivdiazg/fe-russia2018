@@ -54,6 +54,7 @@ export class SidebarComponent implements OnInit {
   }
 
   validaForm(event: any) {
+    // console.log(btoa(this.password));
     if (this.usuario && this.password) {
       if (this.usuario.length > 1 && this.password.length > 1) {
         this.isDisabled = false;

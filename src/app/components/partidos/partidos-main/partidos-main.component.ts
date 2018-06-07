@@ -35,12 +35,12 @@ export class PartidosMainComponent implements OnInit {
         for (const match of group.matches) {
           obj[`match${match.idPartido}A`] =
             new FormControl({
-              value: match.golesA ? match.golesA : match.habilitado ? '0' : ''
+              value: match.golesA !== null ? match.golesA : match.habilitado ? '0' : ''
               , disabled: !match.habilitado
             });
           obj[`match${match.idPartido}B`] =
             new FormControl({
-              value: match.golesB ? match.golesB : match.habilitado ? '0' : ''
+              value: match.golesB !== null ? match.golesB : match.habilitado ? '0' : ''
               , disabled: !match.habilitado
             });
         }
